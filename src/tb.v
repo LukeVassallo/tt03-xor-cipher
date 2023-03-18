@@ -28,7 +28,7 @@ module tb (
     assign d = outputs[1];
 
     // instantiate the DUT
-    seven_segment_seconds seven_segment_seconds(
+    lukevassallo_xor_cipher dut(
         `ifdef GL_TEST
             .vccd1( 1'b1),
             .vssd1( 1'b0),
