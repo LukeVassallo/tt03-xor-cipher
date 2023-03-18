@@ -12,8 +12,12 @@ module xor_cipher (
     input cfg_i,
     output cfg_o );
 
-parameter taps = 32'h00000060;
-//reg cfg[64:0] = {1'b0, lfsr, taps};
+parameter lfsr_taps_default = 32'h00000060;
+parameter lfsr_state_default = 32'h00000055;
+
+reg [63:0] cfg_reg;
+wire [63:0] cfg_next;
+wire [31:0] lfsr_o;
 
 wire internal_lfsr_k;
 wire internal_signature;
@@ -21,10 +25,28 @@ wire internal_signature;
 wire k;
 wire a;
 
+wire cfg_en_b;
+assign cfg_en_b = !cfg_en;
+
+
+always @(posedge clk, posedge rst) begin
+    if (rst) begin
+        cfg_reg <= {lfsr_taps_default, lfsr_state_default};
+    end else begin
+        cfg_reg <= cfg_next;
+    end
+end
+
+assign cfg_next = (cfg_en) ? {cfg_i, cfg_reg[63:1]} : {cfg_reg[63:32], lfsr_o};
+
+
 galois_lfsr uut_galois_lfsr (
     .clk(clk),
     .rst(rst),
-    .taps(32'h60),
+    .en(cfg_en_b),
+    .taps(cfg_reg[63:32]),
+    .lfsr_i(cfg_reg[31:0]),
+    .lfsr_o(lfsr_o),
     .k(internal_lfsr_k)
 );
 
@@ -42,6 +64,6 @@ assign e = a ^ k;
 
 assign d = e ^ k;
 
-assign cfg_o = 1'b0;
+assign cfg_o = cfg_reg[0];
 
 endmodule
