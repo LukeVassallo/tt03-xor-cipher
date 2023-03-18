@@ -1,4 +1,4 @@
-module xor_chiper (
+module xor_cipher (
     input clk,
     input rst, 
     
