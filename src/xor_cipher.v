@@ -18,6 +18,9 @@ parameter taps = 32'h00000060;
 wire internal_lfsr_k;
 wire internal_signature;
 
+wire k;
+wire a;
+
 galois_lfsr uut_galois_lfsr (
     .clk(clk),
     .rst(rst),
