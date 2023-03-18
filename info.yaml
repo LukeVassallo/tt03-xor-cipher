@@ -18,42 +18,43 @@ yaml_version: 3.0
 #
 # Here is a great example: https://github.com/davidsiaw/tt02-davidsiaw-stackcalc/blob/38c5647f83aad2aec675d566aa3d67b98f0aac81/info.yaml
 documentation: 
-  author:       "Matt Venn"
-  title:        "7 segment seconds"
+  author:       "Luke Vassallo"
+  title:        "XOR Stream Cipher"
   language:     "Verilog"
-  description:  "Count up to 10, one second at a time."
+  description:  "Accepts an input bitstream and generates an encrypted version on the output using an XOR Cipher."
 
 # Longer description of how the project works. You can use standard markdown format.
   how_it_works: |
-      Uses a set of registers to divide the clock, and then some combinational logic
-      to convert from binary to decimal for the display.
-
-      Puts a slower square wave output on output 7.
+      Internally implements a Galois LFSR to generate the key stream that is XORed with the incoming bitstream to create the cipher stream at the output. By default an internal 256-bit bitstream generator is present and selected, thus upon reset a known bitstream can be probed at the output.
+      
+      The system uses a Galois Linear Feedback Shift Register (LFSR) to produce a key stream that is combined with the incoming bitstream through an XORing process to create the cipher stream that appears at the output. When the system is reset, an internal 256-bit bitstream generator is selected by default as the plaintext to generate the encrypted stream at the output. An external plaintext source can be selected via the configuration  vector described next.
+      
+      To configure the chip, a 66-bit configuration vector is inputted through the pin cfg_i while the current configuration is simultaneously outputted on pin cfg_o. This configuration method functions as a lengthy shift register with its input connected to cfg_i and its output connected to cfg_o. It only operates synchronously to clk when cfg_en is asserted. The configuration vector consists of 31->0 bits for the LFSR state, 63->32 bits for the LFSR taps, and bit 64 for selecting between the internal or externally provided bitstream generator. Bit 65 is used to internally route the output stream through an XOR that decrypts the text and places the decrypted stream on the outptut pin.  
 
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
   how_to_test:  |
-      After reset, the counter should increase by one every second.
+      Coming soon.
 
 # A description of what the inputs do
   inputs:               
     - clock
     - reset
-    - none
-    - none
-    - none
-    - none
+    - data bitstream
+    - external key
+    - cfg_en
+    - cfg_i
     - none
     - none
 # A description of what the outputs do
   outputs:
-    - segment a
-    - segment b
-    - segment c
-    - segment d
-    - segment e
-    - segment f
-    - segment g
-    - slow clock output
+    - encrypted stream
+    - decrypted stream
+    - cfg_o
+    - none
+    - none
+    - none
+    - none
+    - none
 
 # The following fields are optional
   tag:          "timer, test"      # comma separated list of tags: test encryption, experiment, clock, animation, utility, industrial, pwm, fpga, alu, microprocessor, risc, riscv, sensor, signal generator, fft, filter, music, bcd, sound, serial, timer, random number generator, calculator, decoder, counter, puzzle, multiplier, game, oscillator,
