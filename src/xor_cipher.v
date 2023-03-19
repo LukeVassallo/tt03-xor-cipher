@@ -14,9 +14,12 @@ module xor_cipher (
 
 parameter lfsr_taps_default = 32'h00000060;
 parameter lfsr_state_default = 32'h00000055;
+parameter k_mux_internal_lfsr = 1'b0;
+parameter a_mux_internal_signature = 1'b0;
+parameter d_en_disabled = 1'b0;
 
-reg [63:0] cfg_reg;
-wire [63:0] cfg_next;
+reg [66:0] cfg_reg;
+wire [66:0] cfg_next;
 wire [31:0] lfsr_o;
 
 wire internal_lfsr_k;
@@ -27,7 +30,12 @@ wire a;
 
 wire cfg_en_b;
 assign cfg_en_b = !cfg_en;
+wire ld;
+wire k_mux, a_mux, d_en; 
 
+assign k_mux = cfg_reg[66];
+assign a_mux = cfg_reg[65];
+assign d_en = cfg_reg[64]; 
 
 always @(posedge clk, posedge rst) begin
     if (rst) begin
@@ -37,13 +45,13 @@ always @(posedge clk, posedge rst) begin
     end
 end
 
-assign cfg_next = (cfg_en) ? {cfg_i, cfg_reg[63:1]} : {cfg_reg[63:32], lfsr_o};
-
+assign cfg_next = (cfg_en) ? {cfg_i, cfg_reg[66:1]} : {k_mux_internal_lfsr, a_mux_internal_signature, d_en_disabled, cfg_reg[63:32], lfsr_o};
 
 galois_lfsr uut_galois_lfsr (
     .clk(clk),
     .rst(rst),
     .en(cfg_en_b),
+    .ld(ld),
     .taps(cfg_reg[63:32]),
     .lfsr_i(cfg_reg[31:0]),
     .lfsr_o(lfsr_o),
@@ -56,13 +64,20 @@ signature uut_signature (
     .q(internal_signature)
 );
 
-assign k = internal_lfsr_k;
+counter uut_counter (
+    .clk(clk),
+    .rst(rst),
+    .en(cfg_en),
+    .trigger_count(67),
+    .pulse(ld));
 
-assign a = internal_signature;
+assign k = (k_mux == 1'b1) ? external_k : internal_lfsr_k;
+
+assign a = (a_mux == 1'b1) ? data_stream : internal_signature;
 
 assign e = a ^ k; 
 
-assign d = e ^ k;
+assign d = (d_en == 1'b1) ? e ^ k : 1'b0;
 
 assign cfg_o = cfg_reg[0];
 

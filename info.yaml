@@ -9,6 +9,7 @@ project:
     - lukevassallo_xor_cipher.v
     - xor_cipher.v
     - signature.v
+    - counter.v
     - lfsr.v
   top_module:  "lukevassallo_xor_cipher"      # put the name of your top module here, make it unique by prepending your github username
 
@@ -23,7 +24,7 @@ documentation:
   author:       "Luke Vassallo"
   title:        "XOR Stream Cipher"
   language:     "Verilog"
-  description:  "Accepts an input bitstream and generates an encrypted version on the output using an XOR Cipher."
+  description:  "An XOR stream cipher with programmable galois LFSR and plenty of debugging features."
 
 # Longer description of how the project works. You can use standard markdown format.
   how_it_works: |
