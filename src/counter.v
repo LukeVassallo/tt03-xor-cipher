@@ -2,16 +2,16 @@ module counter (
     input clk,
     input rst,
     input en,
-    input [7:0] trigger_count,
+    input [15:0] trigger_count,
+    output reg [15:0] count,
     output pulse
 );
 
-reg [7:0] count;
-wire [7:0] count_next;
+wire [15:0] count_next;
 
 always @(posedge clk) begin
     if (rst) begin
-        count <= 8'b0;
+        count <= 16'b0;
     end else begin
         count <= count_next;
     end
