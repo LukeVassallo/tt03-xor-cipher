@@ -9,7 +9,7 @@ module counter (
 reg [7:0] count;
 wire [7:0] count_next;
 
-always @(posedge clk, posedge rst) begin
+always @(posedge clk) begin
     if (rst) begin
         count <= 8'b0;
     end else begin

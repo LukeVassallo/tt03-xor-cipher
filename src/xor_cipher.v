@@ -37,7 +37,7 @@ assign k_mux = cfg_reg[66];
 assign a_mux = cfg_reg[65];
 assign d_en = cfg_reg[64]; 
 
-always @(posedge clk, posedge rst) begin
+always @(posedge clk) begin
     if (rst) begin
         cfg_reg <= {lfsr_taps_default, lfsr_state_default};
     end else begin

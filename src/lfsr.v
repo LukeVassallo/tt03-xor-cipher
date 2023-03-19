@@ -28,7 +28,7 @@ reg [31:0] lfsr_reg;
 //    end
 //end
 
-always @(posedge clk or posedge rst) begin
+always @(posedge clk) begin
     if (rst) begin        
         lfsr_reg <= lfsr_i;
     end else begin
