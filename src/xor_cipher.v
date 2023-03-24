@@ -12,10 +12,10 @@ module xor_cipher (
     input cfg_i,
     input en,
     output cfg_o,
-    output heartbeat );
+    output [4:0] heartbeat );
 
-parameter lfsr_taps_default = 64'h0000000000000060;
-parameter lfsr_state_default = 64'h000000000000055;
+parameter lfsr_taps_default = 64'h0000000048000000;
+parameter lfsr_state_default = 64'h00000000000000055;
 parameter k_mux_internal_lfsr = 1'b0;
 parameter a_mux_internal_signature = 1'b0;
 parameter d_en_disabled = 1'b0;
@@ -74,7 +74,7 @@ counter uut_counter (
     .clk(clk),
     .rst(rst),
     .en(cfg_en),
-    .trigger_count(130),
+    .trigger_count(16'd130),
     .count(),
     .pulse(ld));
     
@@ -96,6 +96,6 @@ assign d = (cfg_en == 1'b0) ? ((d_en == 1'b1) ? e ^ k : 1'b0) : 1'b0;
 
 assign cfg_o = (cfg_en == 1'b1) ? cfg_reg[0] : 1'b0;
 
-assign heartbeat = heartbeat_count[9];
+assign heartbeat = heartbeat_count[9:5];
 
 endmodule

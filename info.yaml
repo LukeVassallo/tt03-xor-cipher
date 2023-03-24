@@ -24,7 +24,7 @@ documentation:
   author:       "Luke Vassallo"
   title:        "XOR Stream Cipher"
   language:     "Verilog"
-  description:  "An XOR stream cipher with programmable galois LFSR and plenty of debugging features."
+  description:  "An XOR stream cipher with a programmable galois LFSR."
 
 # Longer description of how the project works. You can use standard markdown format.
   how_it_works: |
@@ -32,32 +32,32 @@ documentation:
 
     The system uses a Galois Linear Feedback Shift Register (LFSR) to produce a key stream that is combined with the incoming bitstream through an XORing process to create the cipher stream that appears at the output. When the system is reset, an internal 256-bit bitstream generator is selected by default as the plaintext to generate the encrypted stream at the output. An external plaintext source can be selected via the configuration  vector described next.
 
-    To configure the chip, a 66-bit configuration vector is inputted through the pin cfg_i while the current configuration is simultaneously outputted on pin cfg_o. This configuration method functions as a lengthy shift register with its input connected to cfg_i and its output connected to cfg_o. It only operates synchronously to clk when cfg_en is asserted. The configuration vector consists of 31->0 bits for the LFSR state, 63->32 bits for the LFSR taps, and bit 64 for selecting between the internal or externally provided bitstream generator. Bit 65 is used to internally route the output stream through an XOR that decrypts the text and places the decrypted stream on the outptut pin.  
+    To configure the chip, a 131-bit configuration vector is inputted through the pin cfg_i while the current configuration is simultaneously outputted on pin cfg_o. This configuration method functions as a lengthy shift register with its input connected to cfg_i and its output connected to cfg_o. It only operates synchronously to clk when cfg_en is asserted. The configuration vector consists of 63->0 bits for the LFSR state, 127->64 bits for the LFSR taps. Power-on-reset state has the taps configured for PRBS-31 and LFSR state holding 0x55. Bit 128 is used to internally route the output stream through an XOR that decrypts the text and places the decrypted stream on the outptut pin. Bit 129 selects between the internal (default) or externally provided plaintext generator (disabled by default). Bit 130 selects between the internal (default) or externally provided key stream.  
 
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
   how_to_test:  |
-      Coming soon.
+      Refer to the repository for FPGA based testing of the design. Vivado and FOSS flows will be available soon!
 
 # A description of what the inputs do
   inputs:               
     - clock
     - reset
-    - data bitstream
+    - plaintext bitstream
     - external key
-    - cfg_en
-    - cfg_i
-    - none
+    - configuration enable (cfg_en)
+    - configuration input (cfg_i)
+    - enable (en)
     - none
 # A description of what the outputs do
   outputs:
     - encrypted stream
     - decrypted stream
-    - cfg_o
-    - none
-    - none
-    - none
-    - none
-    - none
+    - configuration output (cfg_o)
+    - heartbeat[5]
+    - heartbeat[6]
+    - heartbeat[7]
+    - heartbeat[8]
+    - heartbeat[9]
 
 # The following fields are optional
   tag:          "timer, test"      # comma separated list of tags: test encryption, experiment, clock, animation, utility, industrial, pwm, fpga, alu, microprocessor, risc, riscv, sensor, signal generator, fft, filter, music, bcd, sound, serial, timer, random number generator, calculator, decoder, counter, puzzle, multiplier, game, oscillator,
