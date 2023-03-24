@@ -1,4 +1,4 @@
-module dual_xor_stream_cipher (
+module dual_xor_stream_cipher #(parameter M = 32)(
     input clk,
     input rst, 
     
@@ -17,17 +17,17 @@ module dual_xor_stream_cipher (
     output cfg_o,
     output [2:0] heartbeat );
 
-parameter tx_lfsr_taps_default = 48'h000048000000;
-parameter tx_lfsr_state_default = 48'h0000000000055;
-parameter rx_lfsr_taps_default = 48'h000048000000;
-parameter rx_lfsr_state_default = 48'h0000000000055;
+parameter tx_lfsr_taps_default = 'h48000000;
+parameter tx_lfsr_state_default = 'h000000055;
+parameter rx_lfsr_taps_default = 'h48000000;
+parameter rx_lfsr_state_default = 'h000000055;
 parameter k_mux_internal_lfsr = 1'b0;
 parameter a_mux_internal_signature = 1'b0;
 parameter d_en_disabled = 1'b0;
 
-reg [194:0] cfg_reg;
-wire [194:0] cfg_next;
-wire [47:0] tx_lfsr_o,rx_lfsr_o;
+reg [4*M+2:0] cfg_reg;
+wire [4*M+2:0] cfg_next;
+wire [M-1:0] tx_lfsr_o,rx_lfsr_o;
 
 wire internal_lfsr_k;
 wire internal_signature;
@@ -44,9 +44,9 @@ wire combined_tx_en, combined_rx_en;
 assign combined_tx_en = tx_en & cfg_en_b;
 assign combined_rx_en = rx_en & cfg_en_b;
 
-assign k_mux = cfg_reg[194];
-assign a_mux = cfg_reg[193];
-assign d_en = cfg_reg[192]; 
+assign k_mux = cfg_reg[4*M+2];
+assign a_mux = cfg_reg[4*M+1];
+assign d_en = cfg_reg[4*M]; 
 
 always @(posedge clk) begin
     if (rst) begin
@@ -56,27 +56,27 @@ always @(posedge clk) begin
     end
 end
 
-assign cfg_next = (cfg_en) ? {cfg_i, cfg_reg[194:1]} : {cfg_reg[194:144], tx_lfsr_o, cfg_reg[95:48], rx_lfsr_o};
+assign cfg_next = (cfg_en) ? {cfg_i, cfg_reg[4*M+2:1]} : {cfg_reg[4*M+2:4*M], cfg_reg[4*M-1:3*M], tx_lfsr_o, cfg_reg[2*M-1:M], rx_lfsr_o};
 
-galois_lfsr #( .N(48) ) uut_tx_galois_lfsr
+galois_lfsr #( .N(M) ) uut_tx_galois_lfsr
 (
     .clk(clk),
     .rst(rst),
     .en(combined_tx_en),
     .ld(ld),
-    .taps(cfg_reg[192:144]),
-    .lfsr_i(cfg_reg[143:96]),
+    .taps(cfg_reg[4*M-1:3*M]),
+    .lfsr_i(cfg_reg[3*M-1:2*M]),
     .lfsr_o(tx_lfsr_o),
     .k(internal_tx_lfsr_k)
 );
 
-galois_lfsr #( .N(48) ) uut_rx_galois_lfsr (
+galois_lfsr #( .N(M) ) uut_rx_galois_lfsr (
     .clk(clk),
     .rst(rst),
     .en(combined_rx_en),
     .ld(ld),
-    .taps(cfg_reg[95:48]),
-    .lfsr_i(cfg_reg[47:0]),
+    .taps(cfg_reg[2*M-1:M]),
+    .lfsr_i(cfg_reg[M-1:0]),
     .lfsr_o(rx_lfsr_o),
     .k(internal_rx_lfsr_k)
 );
@@ -92,7 +92,7 @@ counter uut_counter (
     .clk(clk),
     .rst(rst),
     .en(cfg_en),
-    .trigger_count(16'd194),
+    .trigger_count(16'd130),
     .count(),
     .pulse(ld));
     
