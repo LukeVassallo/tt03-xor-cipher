@@ -1,16 +1,18 @@
-module galois_lfsr (
+module galois_lfsr 
+#(parameter N=48)
+(
     input clk,
     input rst,
     input en, 
-    input [63:0] taps,
+    input [N-1:0] taps,
     input ld,
-    input [63:0] lfsr_i,
-    output [63:0] lfsr_o,
+    input [N-1:0] lfsr_i,
+    output [N-1:0] lfsr_o,
     output k
 );
 
-wire [63:0] lfsr_next;
-reg [63:0] lfsr_reg;
+wire [N-1:0] lfsr_next;
+reg [N-1:0] lfsr_reg;
 
 // rising edge detector 
 //reg prev_signal; // register to store previous value of signal
