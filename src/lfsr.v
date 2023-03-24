@@ -40,6 +40,6 @@ assign lfsr_next = (ld==1'b1) ? lfsr_i : (en==1'b1) ? (lfsr_reg[0] ? (lfsr_reg >
 
 assign k = lfsr_reg[0];
 
-assign lfsr_o = lfsr_next;
+assign lfsr_o = lfsr_reg;
 
 endmodule

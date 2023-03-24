@@ -11,7 +11,9 @@ module tb (
     input clk,
     input rst,
     output e,
-    output d
+    output d,
+    output cfg_o,
+    output heartbeat
    );
 
     // this part dumps the trace to a vcd file that can be viewed with GTKWave
@@ -26,7 +28,9 @@ module tb (
     wire [7:0] outputs;
     assign e = outputs[0];
     assign d = outputs[1];
-
+    assign cfg_o = outputs[2];
+    assign heartbeat = outputs[3];
+    
     // instantiate the DUT
     lukevassallo_xor_cipher dut(
         `ifdef GL_TEST

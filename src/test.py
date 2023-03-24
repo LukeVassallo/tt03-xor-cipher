@@ -13,7 +13,7 @@ async def test_xor_cipher(dut):
 
     dut._log.info("reset")
     dut.rst.value = 1
-    await ClockCycles(dut.clk, 10)
+    await ClockCycles(dut.clk, 100)
     dut.rst.value = 0
 
     dut._log.info("e")

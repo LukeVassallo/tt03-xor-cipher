@@ -10,6 +10,7 @@ module xor_cipher (
     
     input cfg_en,
     input cfg_i,
+    input en,
     output cfg_o,
     output heartbeat );
 
@@ -34,6 +35,8 @@ assign cfg_en_b = !cfg_en;
 wire ld;
 wire k_mux, a_mux, d_en; 
 wire [15:0] heartbeat_count;
+wire combined_en;
+assign combined_en = en & cfg_en_b;
 
 assign k_mux = cfg_reg[130];
 assign a_mux = cfg_reg[129];
@@ -47,12 +50,12 @@ always @(posedge clk) begin
     end
 end
 
-assign cfg_next = (cfg_en) ? {cfg_i, cfg_reg[130:1]} : {k_mux_internal_lfsr, a_mux_internal_signature, d_en_disabled, cfg_reg[127:64], lfsr_o};
+assign cfg_next = (cfg_en) ? {cfg_i, cfg_reg[130:1]} : {cfg_reg[130:64], lfsr_o};
 
 galois_lfsr uut_galois_lfsr (
     .clk(clk),
     .rst(rst),
-    .en(cfg_en_b),
+    .en(combined_en),
     .ld(ld),
     .taps(cfg_reg[127:64]),
     .lfsr_i(cfg_reg[63:0]),
@@ -63,6 +66,7 @@ galois_lfsr uut_galois_lfsr (
 signature uut_signature (
     .clk(clk),
     .reset(rst),
+    .en(combined_en),
     .q(internal_signature)
 );
 
@@ -70,7 +74,7 @@ counter uut_counter (
     .clk(clk),
     .rst(rst),
     .en(cfg_en),
-    .trigger_count(131),
+    .trigger_count(130),
     .count(),
     .pulse(ld));
     
@@ -86,11 +90,11 @@ assign k = (k_mux == 1'b1) ? external_k : internal_lfsr_k;
 
 assign a = (a_mux == 1'b1) ? data_stream : internal_signature;
 
-assign e = a ^ k; 
+assign e = (cfg_en == 1'b0) ? a ^ k : 1'b0; 
 
-assign d = (d_en == 1'b1) ? e ^ k : 1'b0;
+assign d = (cfg_en == 1'b0) ? ((d_en == 1'b1) ? e ^ k : 1'b0) : 1'b0;
 
-assign cfg_o = cfg_reg[0];
+assign cfg_o = (cfg_en == 1'b1) ? cfg_reg[0] : 1'b0;
 
 assign heartbeat = heartbeat_count[9];
 

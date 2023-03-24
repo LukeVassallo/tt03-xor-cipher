@@ -14,7 +14,9 @@ xor_cipher uut (
     
     .cfg_en(io_in[4]),
     .cfg_i(io_in[5]),
-    .cfg_o(io_out[2])
+    .en(io_in[6]),
+    .cfg_o(io_out[2]),
+    .heartbeat(io_out[3])
 );
 
 endmodule
