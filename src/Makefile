@@ -9,7 +9,7 @@ TOPLEVEL_LANG ?= verilog
 ifneq ($(GATES),yes)
 
 # this is the only part you should need to modify:
-VERILOG_SOURCES += $(PWD)/tb.v $(PWD)/lukevassallo_xor_cipher.v $(PWD)/xor_cipher.v $(PWD)/lfsr.v $(PWD)/signature.v $(PWD)/counter.v
+VERILOG_SOURCES += $(PWD)/tb.v $(PWD)/lukevassallo_xor_cipher.v $(PWD)/dual_xor_stream_cipher.v $(PWD)/lfsr.v $(PWD)/signature.v $(PWD)/counter.v
 
 else
 

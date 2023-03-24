@@ -17,10 +17,10 @@ module dual_xor_stream_cipher #(parameter M = 32)(
     output cfg_o,
     output [2:0] heartbeat );
 
-parameter tx_lfsr_taps_default = 'h48000000;
-parameter tx_lfsr_state_default = 'h000000055;
-parameter rx_lfsr_taps_default = 'h48000000;
-parameter rx_lfsr_state_default = 'h000000055;
+parameter tx_lfsr_taps_default = {M{32'h48000000}};
+parameter tx_lfsr_state_default = {M{32'h000000055}};
+parameter rx_lfsr_taps_default = {M{32'h48000000}};
+parameter rx_lfsr_state_default = {M{32'h000000055}};
 parameter k_mux_internal_lfsr = 1'b0;
 parameter a_mux_internal_signature = 1'b0;
 parameter d_en_disabled = 1'b0;
@@ -47,6 +47,8 @@ assign combined_rx_en = rx_en & cfg_en_b;
 assign k_mux = cfg_reg[4*M+2];
 assign a_mux = cfg_reg[4*M+1];
 assign d_en = cfg_reg[4*M]; 
+
+wire internal_tx_lfsr_k, internal_rx_lfsr_k;
 
 always @(posedge clk) begin
     if (rst) begin
@@ -84,7 +86,8 @@ galois_lfsr #( .N(M) ) uut_rx_galois_lfsr (
 signature uut_signature (
     .clk(clk),
     .reset(rst),
-    .en(combined_en),
+    .ld(ld),
+    .en(combined_tx_en),
     .q(internal_signature)
 );
 
@@ -92,7 +95,7 @@ counter uut_counter (
     .clk(clk),
     .rst(rst),
     .en(cfg_en),
-    .trigger_count(16'd130),
+    .trigger_count( 16'd4*M+2 ),
     .count(),
     .pulse(ld));
     
@@ -105,6 +108,7 @@ counter uut_heartbeat_counter (
     .pulse());
 
 //assign k = (k_mux == 1'b1) ? external_k : internal_lfsr_k;
+wire txp;
 
 assign txp = (a_mux == 1'b1) ? tx_p : internal_signature;
 

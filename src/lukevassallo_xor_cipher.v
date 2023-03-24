@@ -18,7 +18,7 @@ output [7:0] io_out );
 //    .cfg_o(io_out[2]),
 //    .heartbeat(io_out[7:3])
 //);
-dual_xor_stream_cipher uut (
+dual_xor_stream_cipher #( .M(40) ) uut  (
     .clk(io_in[0]),
     .rst(io_in[1]),
     .tx_p(io_in[2]),
