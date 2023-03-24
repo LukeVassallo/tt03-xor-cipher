@@ -95,7 +95,7 @@ counter uut_counter (
     .clk(clk),
     .rst(rst),
     .en(cfg_en),
-    .trigger_count( 16'd4*M+2 ),
+    .trigger_count( 16'd4*M+3 ), // This is correct. 
     .count(),
     .pulse(ld));
     
