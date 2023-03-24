@@ -7,7 +7,7 @@ project:
 # Source files must be in ./src and you must list each source file separately
   source_files:        
     - lukevassallo_xor_cipher.v
-    - xor_cipher.v
+    - dual_xor_stream_cipher.v
     - signature.v
     - counter.v
     - lfsr.v
@@ -24,7 +24,7 @@ documentation:
   author:       "Luke Vassallo"
   title:        "XOR Stream Cipher"
   language:     "Verilog"
-  description:  "An XOR stream cipher with a programmable galois LFSR."
+  description:  "An XOR stream cipher with a programmable 64-bit galois LFSR."
 
 # Longer description of how the project works. You can use standard markdown format.
   how_it_works: |
@@ -36,14 +36,14 @@ documentation:
 
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
   how_to_test:  |
-      Refer to the repository for FPGA based testing of the design. Vivado and FOSS flows will be available soon!
+      More information will be made available soon. Refer to the repository for FPGA based testing of the design. Vivado and FOSS flows will be available soon.
 
 # A description of what the inputs do
   inputs:               
     - clock
     - reset
-    - plaintext bitstream
-    - external key
+    - p (plaintext bitstream)
+    - ek (external key)
     - configuration enable (cfg_en)
     - configuration input (cfg_i)
     - enable (en)
@@ -60,9 +60,9 @@ documentation:
     - heartbeat[9]
 
 # The following fields are optional
-  tag:          "timer, test"      # comma separated list of tags: test encryption, experiment, clock, animation, utility, industrial, pwm, fpga, alu, microprocessor, risc, riscv, sensor, signal generator, fft, filter, music, bcd, sound, serial, timer, random number generator, calculator, decoder, counter, puzzle, multiplier, game, oscillator,
-  external_hw:  ""      # Describe any external hardware needed
-  discord:      "mattvenn#1907"      # Your discord handle, used for communication and automatically assigning tapeout role after a submission
+  tag:          "xor, stream cipher, encryption circuit, decryption circuit"      # comma separated list of tags: test encryption, experiment, clock, animation, utility, industrial, pwm, fpga, alu, microprocessor, risc, riscv, sensor, signal generator, fft, filter, music, bcd, sound, serial, timer, random number generator, calculator, decoder, counter, puzzle, multiplier, game, oscillator,
+  external_hw:  "General puporse FPGA with PMOD connector for detailed testing./"      # Describe any external hardware needed
+  discord:      ""      # Your discord handle, used for communication and automatically assigning tapeout role after a submission
   doc_link:     ""      # URL to longer form documentation, eg the README.md in your repository
-  clock_hz:     1000       # Clock frequency in Hz (if required)
+  clock_hz:     12500       # Clock frequency in Hz (if required)
   picture:      ""      # relative path to a picture in your repository
