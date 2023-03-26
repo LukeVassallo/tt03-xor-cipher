@@ -1,0 +1,12 @@
+# For the iCE40 UltraPlus (iCE40UP5K-QFN) Breakout Board
+
+set_io rst 23               # sw[0]
+set_io config_once 25       # sw[1]
+
+set_io led_r 41             
+
+# bank 0
+set_io plaintext 4          # 8A
+set_io encrypted 3          # 9B
+set_io decrypted 48         # 4A
+

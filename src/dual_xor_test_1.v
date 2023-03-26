@@ -44,7 +44,7 @@ parameter mux_en_d = 1'b0;
 wire [4*M+1:0] cfg_next;
 reg [10:0] cfg_cntr, run_cntr;  // run_cntr >> cfg_cntr
 
-galois_lfsr uut_galois_lfsr_d (
+galois_lfsr #(.N(64)) uut_galois_lfsr_d (
     .clk(clk),
     .rst(rst),
     .en(en),

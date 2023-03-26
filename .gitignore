@@ -14,3 +14,6 @@ dual_xor_basic_arty35t_vivado/work
 dual_xor_signature_arty35t_vivado/bd
 dual_xor_signature_arty35t_vivado/hw
 dual_xor_signature_arty35t_vivado/work
+
+tools
+env_setup.sh

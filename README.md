@@ -65,10 +65,35 @@ Two examples are provided that test the design both in simulation and on an FPGA
 1. **<a href="./dual_xor_basic_arty35t_vivado">dual_xor_basic_arty35t_vivado</a>** - This example tests the configuration mechanism and encryption/decryption functionality with a loopback test. By means of a VIO, the stimulus block can be setup to configure the DUT once or periodically. Waveforms relating to the configuration pins (`cfg_i`, `cfg_o`, and `cfg_en`) can be monitored using the ILA while the value of the 130-bit configuration register can be monitored on the VIO. Alternatively the design can be configured once and the left to run indefinitely. The plaintext and deciphered streams are monitored and any mismatch updates the error counters.
 2. **<a href="./dual_xor_signature_arty35t_vivado">dual_xor_signature_arty35t_vivado</a>** - This examples configures the DUT to use an internal 41-byte signature as the plaintext. The DUT is connected in loopback: the internal signature and transmitted in cipher form through the transmit channel and deciphered through the receive channel. A serial to parallel bock reads converts the deciphered bitstream into bytes which are then transmitted using a UART. The user can select to feed the ciphered or deciphered stream to the UART and compare the difference. 
 
-FOSS flows for arty35t and ice40UP5k will be added shortly. More details in the corresponding directories.
-
 These examples are intended to be built with Vivado 2020.2. First source the settings file and ensure that vivado is accessible on `$PATH` - e.g. `source /tools/Xilinx/Vivado/2020.2/settings.sh`. Then run `make basic_test` or `make signature_test` to build the individual projects or `make all` to build everything. After the build finishes the bitstream (`.bit`) and associated probes (`.ltx`) files will be available in the hw directory. If you ecounter any issues please feel free to open an issue and we'll sort it out. 
 
+### FOSS Flow on Lattice iCE40UP5
+You can also use yosys, nextpnr, and project icestorm to build the basic and signature example designs. Here's how:
+
+1. Install pre-requisites and acquire the toolchains 
+2. Place toolchain on \$PATH
+3. Build the projects 
+
+Install pre-requisites
+```
+sudo apt-get install build-essential clang bison flex libreadline-dev gawk tcl-dev libffi-dev git graphviz xdot pkg-config python3 libboost-system-dev libboost-python-dev libboost-filesystem-dev zlib1g-dev mercurial libftdi-dev qt5-default python3-dev libboost-all-dev libeigen3-dev
+```
+
+To build all the necessary tools, run the `build_toolchain.sh` bash script. It will clone the required repositories and build everything, including Cmake. If your system already has a recent version of Cmake, you can speed up the build process by commenting out the Cmake section in the script. After the build is complete, an environment setup script will be automatically generated in the repository's root directory. You'll need to call this script each time you create a new shell to set up the necessary environment variables.
+
+```
+./build_toolchain.sh	# build toolchain
+source env_setup.sh		# setup environment 
+```
+
+By default, all toolchains are downloaded and installed in a directory named "tools," located at the root of the repository. The installation process does not affect your system outside of the tools folder, so you can be sure that your system will not be altered in any way.
+
+To build the iCE40UP5 projects simply run make from the root directory as follows:
+
+```
+make basic_ice40up5k_foss
+make signature_ice40up5k_foss
+```
 
 ## ASIC Testing
 Coming soon

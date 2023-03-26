@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module mux #(N=8) ( 
+module mux #(parameter N=8) ( 
     input [N-1:0] a,
     input [N-1:0] b,
     input sel,
