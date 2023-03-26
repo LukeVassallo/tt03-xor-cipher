@@ -3,12 +3,10 @@
 # XOR Stream Cipher Circuit
 This repository builds an XOR stream cipher circuit for participation in Tiny Tapeout 3. This repository contains the design files to simulate, perform hardware tests on an FPGA and through the infrastructure provided by TinyTapeout generate manufacturable ASIC layouts.
 
-<div align="center" >
 <figure style="display:inline-block;" >
 <img src="./docs/dual-xor-top-level.png" alt="Dual XOR Cipher block diagram" style="vertical-align:top;">
-<figcaption style="text-align:center;">Fig.1 - Dual XOR Cipher block diagram</figcaption>
+<figcaption style="text-align:center;"><br>Fig.1 - Dual XOR Cipher block diagram</figcaption>
 </figure>
-</div>
 
 The circuit is based around a 32-bit programmable Galois LFSR for generating the key stream, and an XOR gate for combining it with a plaintext or cipher stream. When a plaintext stream is used, the result in an encrypted bitstream while when a cipher stream (encrypted) is used the original plaintext is returned. Figure 1 presents the block diagram of the system. Detailed information is presented below. 
 
@@ -55,19 +53,17 @@ Two channels are used for concurrent transmission and reception.
 
 ## Chip Layout
 
-<div align="center" >
 <figure style="display:inline-block;" >
 <img src="./docs/chip_2d_preview.png" alt="2D preview of the Integrated Circuit (IC)" style="vertical-align:top;">
 <figcaption style="text-align:center;">Fig.1 - 2D preview of the Integrated Circuit (IC)</figcaption>
 </figure>
-</div>
 
 ## FPGA Testing 
 This section describes how to use this repository simulate and test the functionality of the DUT on an FPGA. Doing so, provides detailed decreases the odds the ASIC is non-functional
 
 Two examples are provided that test the design both in simulation and on an FPGA. The Makefile located in the root of this repository can be used to setup and generate the bitstream of all the designs. Each example instantiates the Design Under Test (DUT) in a block diagram, drives it with a stimulus block and monitors it using both an embedded Integrated Logic Analyser (ILA) and board I/O. 
-1. **dual_xor_basic_arty35t_vivado** - This example tests the configuration mechanism and encryption/decryption functionality with a loopback test. By means of a VIO, the stimulus block can be setup to configure the DUT once or periodically. Waveforms relating to the configuration pins (`cfg_i`, `cfg_o`, and `cfg_en`) can be monitored using the ILA while the value of the 130-bit configuration register can be monitored on the VIO. Alternatively the design can be configured once and the left to run indefinitely. The plaintext and deciphered streams are monitored and any mismatch updates the error counters.
-2. **dual_xor_signature_arty35t_vivado** - This examples configures the DUT to use an internal 41-byte signature as the plaintext. The DUT is connected in loopback: the internal signature and transmitted in cipher form through the transmit channel and deciphered through the receive channel. A serial to parallel bock reads converts the deciphered bitstream into bytes which are then transmitted using a UART. The user can select to feed the ciphered or deciphered stream to the UART and compare the difference. 
+1. **<a href="./dual_xor_basic_arty35t_vivado">dual_xor_basic_arty35t_vivado</a>** - This example tests the configuration mechanism and encryption/decryption functionality with a loopback test. By means of a VIO, the stimulus block can be setup to configure the DUT once or periodically. Waveforms relating to the configuration pins (`cfg_i`, `cfg_o`, and `cfg_en`) can be monitored using the ILA while the value of the 130-bit configuration register can be monitored on the VIO. Alternatively the design can be configured once and the left to run indefinitely. The plaintext and deciphered streams are monitored and any mismatch updates the error counters.
+2. **<a href="./dual_xor_signature_arty35t_vivado">dual_xor_signature_arty35t_vivado</a>** - This examples configures the DUT to use an internal 41-byte signature as the plaintext. The DUT is connected in loopback: the internal signature and transmitted in cipher form through the transmit channel and deciphered through the receive channel. A serial to parallel bock reads converts the deciphered bitstream into bytes which are then transmitted using a UART. The user can select to feed the ciphered or deciphered stream to the UART and compare the difference. 
 
 FOSS flows for arty35t and ice40UP5k will be added shortly. More details in the corresponding directories.
 
