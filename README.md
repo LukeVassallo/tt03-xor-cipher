@@ -5,7 +5,7 @@ This repository builds an XOR stream cipher circuit for participation in Tiny Ta
 
 <div align="center" >
 <figure>
-<img src="./docs/dual-xor-top-level.png" width="80%" alt="Dual XOR Cipher block diagram">
+<img src="./docs/dual-xor-top-level.png" alt="Dual XOR Cipher block diagram">
 <figcaption>Fig.1 - Dual XOR Cipher block diagram</figcaption>
 </figure>
 </div>
@@ -28,9 +28,9 @@ The Galois LFSR operates by shifting the bits in the register to the right, with
 
 ## Implementation
 The design has three major components: 
- 1) programmable galois LFSR - Generates the key stream based on a Pseudo Random Binary Sequence (PRBS). It is implemented as a 32-bit Galois LFSR whose initial state and taps are programmable. Therefore a user-defined polynomial and a user-defined intial state can be configured.  
- 2) XOR gate - The XOR gate combines the key stream with the plaintext or ciphertext streams to encryption or decryption respectively.
- 3) configuration shift register - Taking the form of a 130-bit serial shift register allows the configuration of the LFSR state and taps registers and also some input/output.
+ 1) **Programmable galois LFSR** - Generates the key stream based on a Pseudo Random Binary Sequence (PRBS). It is implemented as a 32-bit Galois LFSR whose initial state and taps are programmable. Therefore a user-defined polynomial and a user-defined intial state can be configured.  
+ 2) **XOR gate** - The XOR gate combines the key stream with the plaintext or ciphertext streams to encryption or decryption respectively.
+ 3) **Configuration shift register** - Taking the form of a 130-bit serial shift register allows the configuration of the LFSR state and taps registers and also some input/output.
 
 Two channels are used for concurrent transmission and reception. 
 
@@ -55,6 +55,12 @@ Two channels are used for concurrent transmission and reception.
 
 ## Chip Layout
 
+<div align="center" >
+<figure>
+<img src="./docs/dual-xor-top-level.png" alt="2D preview of the Integrated Circuit (IC)">
+<figcaption>Fig.1 - 2D preview of the Integrated Circuit (IC)</figcaption>
+</figure>
+</div>
 
 ## FPGA Testing 
 This section describes how to use this repository simulate and test the functionality of the DUT on an FPGA. Doing so, provides detailed decreases the odds the ASIC is non-functional
