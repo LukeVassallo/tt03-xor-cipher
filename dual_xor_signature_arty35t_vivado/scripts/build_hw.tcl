@@ -73,8 +73,11 @@ puts "Build complete."
 puts "Running write bitstream"
 
 write_hw_platform -fixed -force -include_bit hw/dual_xor_fpga_signature_wrapper.xsa
+
+open_run impl_1
 write_bitstream -file hw/dual_xor_fpga_signature_wrapper.bit
 write_debug_probes -file hw/dual_xor_fpga_signature_wrapper.ltx
+close_design
 
 close_project
 
