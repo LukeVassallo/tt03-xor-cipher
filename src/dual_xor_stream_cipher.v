@@ -21,15 +21,13 @@ parameter tx_lfsr_taps_default = {M{32'h48000000}};
 parameter tx_lfsr_state_default = {M{32'h000000055}};
 parameter rx_lfsr_taps_default = {M{32'h48000000}};
 parameter rx_lfsr_state_default = {M{32'h000000055}};
-parameter k_mux_internal_lfsr = 1'b0;
 parameter a_mux_internal_signature = 1'b0;
 parameter d_en_disabled = 1'b0;
 
-reg [4*M+2:0] cfg_reg;
-wire [4*M+2:0] cfg_next;
+reg [4*M+1:0] cfg_reg;
+wire [4*M+1:0] cfg_next;
 wire [M-1:0] tx_lfsr_o,rx_lfsr_o;
 
-wire internal_lfsr_k;
 wire internal_signature;
 
 wire k;
@@ -44,21 +42,20 @@ wire combined_tx_en, combined_rx_en;
 assign combined_tx_en = tx_en & cfg_en_b;
 assign combined_rx_en = rx_en & cfg_en_b;
 
-assign k_mux = cfg_reg[4*M+2];
 assign a_mux = cfg_reg[4*M+1];
 assign d_en = cfg_reg[4*M]; 
 
-wire internal_tx_lfsr_k, internal_rx_lfsr_k;
+wire tx_lfsr_k, rx_lfsr_k;
 
 always @(posedge clk) begin
     if (rst) begin
-        cfg_reg <= {k_mux_internal_lfsr, a_mux_internal_signature, d_en_disabled, tx_lfsr_taps_default, tx_lfsr_state_default, rx_lfsr_taps_default, rx_lfsr_state_default};
+        cfg_reg <= {a_mux_internal_signature, d_en_disabled, tx_lfsr_taps_default, tx_lfsr_state_default, rx_lfsr_taps_default, rx_lfsr_state_default};
     end else begin
         cfg_reg <= cfg_next;
     end
 end
 
-assign cfg_next = (cfg_en) ? {cfg_i, cfg_reg[4*M+2:1]} : {cfg_reg[4*M+2:4*M], cfg_reg[4*M-1:3*M], tx_lfsr_o, cfg_reg[2*M-1:M], rx_lfsr_o};
+assign cfg_next = (cfg_en) ? {cfg_i, cfg_reg[4*M+1:1]} : {cfg_reg[4*M+1:4*M], cfg_reg[4*M-1:3*M], tx_lfsr_o, cfg_reg[2*M-1:M], rx_lfsr_o};
 
 galois_lfsr #( .N(M) ) uut_tx_galois_lfsr
 (
@@ -69,7 +66,7 @@ galois_lfsr #( .N(M) ) uut_tx_galois_lfsr
     .taps(cfg_reg[4*M-1:3*M]),
     .lfsr_i(cfg_reg[3*M-1:2*M]),
     .lfsr_o(tx_lfsr_o),
-    .k(internal_tx_lfsr_k)
+    .k(tx_lfsr_k)
 );
 
 galois_lfsr #( .N(M) ) uut_rx_galois_lfsr (
@@ -80,7 +77,7 @@ galois_lfsr #( .N(M) ) uut_rx_galois_lfsr (
     .taps(cfg_reg[2*M-1:M]),
     .lfsr_i(cfg_reg[M-1:0]),
     .lfsr_o(rx_lfsr_o),
-    .k(internal_rx_lfsr_k)
+    .k(rx_lfsr_k)
 );
 
 signature uut_signature (
@@ -95,7 +92,7 @@ counter uut_counter (
     .clk(clk),
     .rst(rst),
     .en(cfg_en),
-    .trigger_count( 16'd4*M+3 ), // This is correct. 
+    .trigger_count( 16'd4*M+2 ), // This is correct. 
     .count(),
     .pulse(ld));
     
@@ -112,13 +109,13 @@ wire txp;
 
 assign txp = (a_mux == 1'b1) ? tx_p : internal_signature;
 
-assign tx_e = (cfg_en == 1'b0) ? txp ^ internal_tx_lfsr_k : 1'b0; 
+assign tx_e = (cfg_en == 1'b0) ? txp ^ tx_lfsr_k : 1'b0; 
 
-assign rx_p = (cfg_en == 1'b0) ? rx_e ^ internal_rx_lfsr_k : 1'b0; 
+assign rx_p = (cfg_en == 1'b0) ? rx_e ^ rx_lfsr_k : 1'b0; 
 
 //assign d = (cfg_en == 1'b0) ? ((d_en == 1'b1) ? e ^ k : 1'b0) : 1'b0;
-assign dbg_tx_p = (cfg_en == 1'b0) ? ((d_en == 1'b1) ? tx_e ^ internal_tx_lfsr_k : 1'b0) : 1'b0;
-assign dbg_rx_e = (cfg_en == 1'b0) ? ((d_en == 1'b1) ? rx_p ^ internal_rx_lfsr_k : 1'b0) : 1'b0;
+assign dbg_tx_p = (cfg_en == 1'b0) ? ((d_en == 1'b1) ? tx_e ^ tx_lfsr_k : 1'b0) : 1'b0;
+assign dbg_rx_e = (cfg_en == 1'b0) ? ((d_en == 1'b1) ? rx_p ^ rx_lfsr_k : 1'b0) : 1'b0;
 
 assign cfg_o = (cfg_en == 1'b1) ? cfg_reg[0] : 1'b0;
 
