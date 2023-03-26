@@ -1,5 +1,7 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg)
 
+[toc]
+
 # XOR Stream Cipher Circuit
 This repository builds an XOR stream cipher circuit for participation in Tiny Tapeout 3. This repository contains the design files to simulate, perform hardware tests on an FPGA and through the infrastructure provided by TinyTapeout generate manufacturable ASIC layouts.
 
