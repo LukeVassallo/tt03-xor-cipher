@@ -1,12 +1,13 @@
 tool_version=2020.2
 VIVADO ?= vivado
 XSCT ?= xsct 
+JOBS ?= 2
 
 all : hw_pfm 
 
 hw_pfm : 
 	@echo "Starting Vivado ${tool_version}"
-	@${VIVADO} -nolog -nojournal -mode batch -source scripts/build_hw.tcl
+	@${VIVADO} -nolog -nojournal -mode batch -source scripts/build_hw.tcl -tclargs ${JOBS}
 
 env_info:
 	@echo "VIVADO is ${VIVADO}"
