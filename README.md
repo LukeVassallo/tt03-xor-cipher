@@ -4,9 +4,9 @@
 This repository builds an XOR stream cipher circuit for participation in Tiny Tapeout 3. This repository contains the design files to simulate, perform hardware tests on an FPGA and through the infrastructure provided by TinyTapeout generate manufacturable ASIC layouts.
 
 <div align="center" >
-<figure>
-<img src="./docs/dual-xor-top-level.png" alt="Dual XOR Cipher block diagram">
-<figcaption>Fig.1 - Dual XOR Cipher block diagram</figcaption>
+<figure style="display:inline-block;" >
+<img src="./docs/dual-xor-top-level.png" alt="Dual XOR Cipher block diagram" style="vertical-align:top;">
+<figcaption style="text-align:center;">Fig.1 - Dual XOR Cipher block diagram</figcaption>
 </figure>
 </div>
 
@@ -56,9 +56,9 @@ Two channels are used for concurrent transmission and reception.
 ## Chip Layout
 
 <div align="center" >
-<figure>
-<img src="./docs/dual-xor-top-level.png" alt="2D preview of the Integrated Circuit (IC)">
-<figcaption>Fig.1 - 2D preview of the Integrated Circuit (IC)</figcaption>
+<figure style="display:inline-block;" >
+<img src="./docs/chip_2d_preview.png" alt="2D preview of the Integrated Circuit (IC)" style="vertical-align:top;">
+<figcaption style="text-align:center;">Fig.1 - 2D preview of the Integrated Circuit (IC)</figcaption>
 </figure>
 </div>
 
