@@ -30,6 +30,8 @@ setup-job:
 
 build-xilinx-vivado:       # This job runs in the build stage, which runs first.
     stage: build
+    variables:
+        GIT_CHECKOUT: "false"
     tags:
         - fpga-builder  
     script:
@@ -43,6 +45,8 @@ build-xilinx-vivado:       # This job runs in the build stage, which runs first.
 
 build-ice40up5k-foss:       # This job runs in the build stage, which runs first.
     stage: build
+    variables:
+        GIT_CHECKOUT: "false"
     tags:
         - fpga-builder
     script:
