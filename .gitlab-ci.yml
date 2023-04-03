@@ -27,26 +27,36 @@ setup-job:
         - fpga-builder
     script:
         - bash ./build_toolchain.sh
+    artifacts:
+        untracked: false
+        when: on_success
+        expire_in: 2 days
+        paths:
+            - tools
+            - env_setup.sh
 
-build-xilinx-vivado:       # This job runs in the build stage, which runs first.
-    stage: build
-    variables:
-        GIT_CHECKOUT: "false"
-    tags:
-        - fpga-builder  
-    script:
-        - echo "Compiling the code..."   
-        - VERSION=2020.2
-        - source /tools/Xilinx/Vivado/${VERSION}/settings64.sh
-        - vivado -version
-        - make basic_arty35t_vivado
-        - make signature_arty35t_vivado
-        - echo "Compile complete."
+#build-xilinx-vivado:       # This job runs in the build stage, which runs first.
+#    stage: build
+#    tags:
+#        - fpga-builder  
+#    script:
+#        - echo "Compiling the code..."   
+#        - VERSION=2020.2
+#        - source /tools/Xilinx/Vivado/${VERSION}/settings64.sh
+#        - vivado -version
+#        - make basic_arty35t_vivado
+#        - make signature_arty35t_vivado
+#        - echo "Compile complete."
+#    artifacts:
+#        untracked: false
+#        when: on_success
+#        expire_in: 7 days
+#        paths:
+#            - dual_xor_basic_arty35t_vivado/hw
+#            - dual_xor_signature_arty35t_vivado/hw
 
 build-ice40up5k-foss:       # This job runs in the build stage, which runs first.
     stage: build
-    variables:
-        GIT_CHECKOUT: "false"
     tags:
         - fpga-builder
     script:
@@ -55,6 +65,13 @@ build-ice40up5k-foss:       # This job runs in the build stage, which runs first
         - make basic_arty35t_vivado
         - make signature_arty35t_vivado
         - echo "Compile complete."
+    artifacts:
+        untracked: false
+        when: on_success
+        expire_in: 7 days
+        paths:
+            - dual_xor_basic_ice40up5_foss/dual_xor_basic.bin
+            - dual_xor_signature_ice40up5_foss/dual_xor_signature.bin        
 
 #unit-test-job:   # This job runs in the test stage.
 #  stage: test    # It only starts when the job in the build stage completes successfully.
