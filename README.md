@@ -78,7 +78,7 @@ You can also use yosys, nextpnr, and project icestorm to build the basic and sig
 
 Install pre-requisites
 ```
-sudo apt-get install build-essential clang bison flex libreadline-dev gawk tcl-dev libffi-dev git graphviz xdot pkg-config python3 libboost-system-dev libboost-python-dev libboost-filesystem-dev zlib1g-dev mercurial libftdi-dev qt5-default python3-dev libboost-all-dev libeigen3-dev
+sudo apt-get install build-essential clang bison flex libreadline-dev gawk tcl-dev libffi-dev git graphviz xdot pkg-config python3 libboost-system-dev libboost-python-dev libboost-filesystem-dev zlib1g-dev mercurial libftdi-dev qt5-default python3-dev libboost-all-dev libeigen3-dev libssl-dev
 ```
 
 To build all the necessary tools, run the `build_toolchain.sh` bash script. It will clone the required repositories and build everything, including Cmake. If your system already has a recent version of Cmake, you can speed up the build process by commenting out the Cmake section in the script. After the build is complete, an environment setup script will be automatically generated in the repository's root directory. You'll need to call this script each time you create a new shell to set up the necessary environment variables.
